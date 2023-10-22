@@ -37,16 +37,31 @@ impl Component for Home {
 
   fn update(&mut self, action: Action) -> Result<Option<Action>> {
     match action {
-      Action::Tick => {
-      },
+      Action::Tick => {},
       _ => {},
     }
     Ok(None)
   }
 
   fn draw(&mut self, f: &mut Frame<'_>, area: Rect) -> Result<()> {
-    f.render_widget(Paragraph::new("hello world"), area);
+    let chunks = Layout::default()
+      .direction(Direction::Horizontal)
+      .margin(1)
+      .constraints([Constraint::Percentage(20), Constraint::Percentage(80)].as_ref())
+      .split(f.size());
+    let b = Block::default()
+      .borders(Borders::ALL)
+      .title(block::Title::from("KOSMONAUT").alignment(Alignment::Center))
+      .border_type(BorderType::Rounded);
+    f.render_widget(b, chunks[0]);
+
+    let items = [ListItem::new("Item 1"), ListItem::new("Item 2"), ListItem::new("Item 3")];
+    let l = List::new(items)
+      .block(Block::default().title("SSH CONNECTIONS").borders(Borders::ALL).border_type(BorderType::Rounded) )
+      .style(Style::default().fg(Color::White))
+      .highlight_style(Style::default().add_modifier(Modifier::ITALIC))
+      .highlight_symbol(">>");
+    f.render_widget(l, chunks[1]);
     Ok(())
   }
 }
-
